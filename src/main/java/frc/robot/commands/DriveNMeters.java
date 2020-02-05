@@ -9,19 +9,27 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.PIDController;
 import frc.robot.subsystems.Drivebase;
+import static frc.robot.Constants.Drive.*;
 
 
 public class DriveNMeters extends CommandBase {
   /**
    * Creates a new DriveNMeters.
    */
-
   double l;
   double s;
   Drivebase __drivebase;
   boolean isNegative = false;
   boolean set = false;
+
+  double factor = 1;
+
+  double I = 0;
+
+  PIDController angle_Controller = new PIDController(angle_kP, angle_kI, angle_kD);
+  PIDController distance_Controller = new PIDController(distance_kP, distance_kI, distance_kD);
 
   public DriveNMeters(Drivebase drivebase, final double length, final double speed) {
     l = length;
@@ -32,6 +40,7 @@ public class DriveNMeters extends CommandBase {
 //    addRequirements(Robot.m_robotContainer.m_Drivebase);
     __drivebase = drivebase;
     set = false;
+    factor = 1;
     addRequirements(__drivebase);
   }
 
@@ -46,15 +55,22 @@ public class DriveNMeters extends CommandBase {
   @Override
   public void execute() 
   {
-    double factor = 1;
-    if ((__drivebase.RightMaster.getSelectedSensorPosition() != 0)&&(!set))
-    {
-      double next = __drivebase.LeftMaster.getSelectedSensorPosition()/__drivebase.RightMaster.getSelectedSensorPosition();
-      if (Math.abs(factor - 1) < 0.001) set = true;
-      if (!set) factor *= next;
-    }
-    SmartDashboard.putNumber("Calculated Factor: ", factor);
-    __drivebase.tankDrive(factor*s, s);
+    // if (__drivebase.RightMaster.getSelectedSensorPosition() != 0)
+    // {
+    //   SmartDashboard.putNumber("In execute: ", __drivebase.RightMaster.getSelectedSensorPosition());
+   
+    //   double next = __drivebase.LeftMaster.getSelectedSensorPosition()/__drivebase.RightMaster.getSelectedSensorPosition();
+    //   if (next != 0)
+    //     factor *= next;
+    //     SmartDashboard.putNumber("Current ratio: ", next);
+    // }
+    // SmartDashboard.putNumber("Calculated Factor: ", factor);
+    double error = __drivebase.LeftMaster.getSelectedSensorPosition() - __drivebase.RightMaster.getSelectedSensorPosition();
+    double PI = angle_Controller.output(error);
+    double current_speed = s * distance_Controller.output(l - __drivebase.getSensorMetricPosition());
+    SmartDashboard.putNumber("Current speed: ", s);
+    SmartDashboard.putNumber("Current error: ", error);
+    __drivebase.tankDrive(current_speed + PI, current_speed - PI);
   }
 
   // Called once the command ends or is interrupted.
@@ -67,8 +83,9 @@ public class DriveNMeters extends CommandBase {
   @Override
   public boolean isFinished() 
   {
-    if (!isNegative)
-    return (__drivebase.getSensorMetricPosition() > l);
-    else return (__drivebase.getSensorMetricPosition() < l);
+    return Math.abs(l - __drivebase.getSensorMetricPosition()) < 0.1;
+    // if (!isNegative)
+    // return (__drivebase.getSensorMetricPosition() > l);
+    // else return (__drivebase.getSensorMetricPosition() < l);
   }
 }

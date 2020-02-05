@@ -39,8 +39,18 @@ public final class Constants {
                                    StableD = 0,
 //Tolerence, should be increased/?
                                    PositionTolerence = 0,
-                                   VelocityTolerence = 0;
-                                
+                                   VelocityTolerence = 0;                           
+    }
+    public static final class Drive
+    {
+        public static final double angle_kP = 1/4096.0,
+                                   angle_kI = 0.00013,
+                                   angle_kD = 0.01;
+                                   
+        public static final double distance_kP = 0.09,
+                                   distance_kI = 0.05,
+                                   distance_kD = 0;
+        
     }
   
 }

@@ -20,6 +20,6 @@ public class AutonomousCommand extends SequentialCommandGroup {
   public AutonomousCommand(final Drivebase drivebase) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new DriveNMeters(drivebase, 1.5, 0.6));
+    super(new DriveNMeters(drivebase, 4, 0.6));
   }
 }

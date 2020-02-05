@@ -36,7 +36,7 @@ public class Drivebase extends SubsystemBase
   {
     Gyro.reset();
     RightMaster.setSensorPhase(true);
-    setMaxOutput(0.5);
+ //   Drive.setMaxOutput(0.5);
  //   RightMotors.setInverted(true);
   }
 
@@ -63,7 +63,7 @@ public class Drivebase extends SubsystemBase
 
   public double getSensorMetricPosition()
   {
-    return RightMaster.getSelectedSensorPosition() / Constants.Wheel.UNITS_PER_ROUND * Constants.Wheel.WHEEL_RADIUS;
+    return RightMaster.getSelectedSensorPosition() / (double)Constants.Wheel.UNITS_PER_ROUND * Constants.Wheel.WHEEL_RADIUS;
   }
 
   public void setMaxOutput(double maxOutput)
