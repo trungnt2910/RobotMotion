@@ -7,7 +7,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivebase;
 
@@ -21,7 +20,8 @@ public class DriveNMeters extends CommandBase {
   double s;
   Drivebase __drivebase;
   boolean isNegative = false;
-  boolean set = false;
+
+  double factor;
 
   public DriveNMeters(Drivebase drivebase, final double length, final double speed) {
     l = length;
@@ -31,7 +31,7 @@ public class DriveNMeters extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
 //    addRequirements(Robot.m_robotContainer.m_Drivebase);
     __drivebase = drivebase;
-    set = false;
+    factor = 1;
     addRequirements(__drivebase);
   }
 
@@ -46,14 +46,12 @@ public class DriveNMeters extends CommandBase {
   @Override
   public void execute() 
   {
-    double factor = 1;
-    if ((__drivebase.RightMaster.getSelectedSensorPosition() != 0)&&(!set))
+  // Old code to keep the robot going straight by the calculation of the ratio of the two wheels in runtime.
+    if (__drivebase.RightMaster.getSelectedSensorPosition() != 0)
     {
       double next = __drivebase.LeftMaster.getSelectedSensorPosition()/__drivebase.RightMaster.getSelectedSensorPosition();
-      if (Math.abs(factor - 1) < 0.001) set = true;
-      if (!set) factor *= next;
+      factor *= next;
     }
-    SmartDashboard.putNumber("Calculated Factor: ", factor);
     __drivebase.tankDrive(factor*s, s);
   }
 
