@@ -15,11 +15,11 @@ import frc.robot.subsystems.Drivebase;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class TurnToAngle extends PIDCommand {
+public class Turn extends PIDCommand {
   /**
    * Creates a new TurnToAngle.
    */
-  public TurnToAngle(final Drivebase drivebase, final double targetAngle, final double speed) {
+  public Turn(final Drivebase drivebase, final double targetAngle) {
     super(
         // The controller that the command will use
         new PIDController(0.2, 0.01, 1.6),
@@ -29,7 +29,7 @@ public class TurnToAngle extends PIDCommand {
         targetAngle,
         // This uses the output
         output -> {
-          drivebase.arcadeDrive(speed , output);
+          drivebase.arcadeDrive(0 , output);
         });
     //This treats the min and max values as the same points.
     getController().enableContinuousInput(-180, 180);
@@ -42,6 +42,6 @@ public class TurnToAngle extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }
