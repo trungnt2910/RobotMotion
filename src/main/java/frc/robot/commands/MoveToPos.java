@@ -19,6 +19,6 @@ public class MoveToPos extends SequentialCommandGroup {
    */
   public MoveToPos(Drivebase drivebase, final double length, final double angle, final double speed) {
     // Add your commands in the super() call, e.g.
-    super(new Turn(drivebase, angle), new DriveNMeters(drivebase, length, speed));
+    super(new TurnToAngle(drivebase, angle), new DriveNMeters(drivebase, length, speed));
   }
 }

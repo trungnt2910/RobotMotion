@@ -20,6 +20,10 @@ public class AutonomousCommand extends SequentialCommandGroup {
   public AutonomousCommand(final Drivebase drivebase) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
+    
+    //This is the commmand we are going to use:
+
+    //super(new MoveToPos(drivebase, 45, 5.0, 0.6)); //The robot should turn right by 45 degrees, then go straight 5.0 meters with 0.6 output.
     super(new TurnToAngle(drivebase, 180).withTimeout(5));
   }
 }
