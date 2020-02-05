@@ -46,11 +46,19 @@ public final class Constants {
         public static final double angle_kP = 1/4096.0,
                                    angle_kI = 0.00013,
                                    angle_kD = 0.01;
-                                   
+
         public static final double distance_kP = 0.09,
                                    distance_kI = 0.05,
                                    distance_kD = 0;
+        public static final double distanceErrorTolerance = 0.1;
         
+    }
+    public static final class Turn
+    {
+        public static final double turn_kP = 1.0/180,
+                                   turn_kI = 0,
+                                   turn_kD = 0;
+        public static final double angleErrorTolerence = 0.1;
     }
   
 }

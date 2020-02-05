@@ -7,41 +7,64 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.PIDController;
 import frc.robot.subsystems.Drivebase;
+import static frc.robot.Constants.Turn.*;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class TurnToAngle extends PIDCommand {
+public class TurnToAngle extends CommandBase {
   /**
    * Creates a new TurnToAngle.
    */
-  public TurnToAngle(final Drivebase drivebase, final double targetAngle) {
-    super(
-        // The controller that the command will use
-        new PIDController(0.2, 0.01, 1.6),
-        // This should return the measurement
-        drivebase::getGyroYaw,
-        // This should return the setpoint (can also be a constant)
-        targetAngle,
-        // This uses the output
-        output -> {
-          drivebase.arcadeDrive(0 , output);
-        });
-    //This treats the min and max values as the same points.
-    getController().enableContinuousInput(-180, 180);
-    //Setting our tolerence.
-    getController().setTolerance(Constants.Gyro.PositionTolerence, Constants.Gyro.VelocityTolerence);
+  Drivebase __drivebase;
+
+  PIDController speedTuner;
+  double tAngle;
+
+  double current_error;
+
+  public TurnToAngle(Drivebase drivebase, final double targetAngle) 
+  {
+    tAngle = targetAngle;
+    __drivebase = drivebase;
     // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
+    addRequirements(__drivebase);
+    speedTuner = new PIDController(0.02, turn_kI, turn_kD);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() 
+  {
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() 
+  {
+    current_error = tAngle - __drivebase.getGyroAngle();
+    double output = speedTuner.output(current_error);
+    double current_speed =  MathUtil.clamp(output, -0.17, 0.17);
+    SmartDashboard.putNumber("Current error: ", current_error);
+    
+    SmartDashboard.putNumber("Current speed: ", current_speed);
+    __drivebase.tankDrive(current_speed, -current_speed);
+  }
+
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted)
+  {
+    __drivebase.Stop();
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() 
+  {
+    // return Math.abs(current_error) < angleErrorTolerence;
     return false;
   }
 }

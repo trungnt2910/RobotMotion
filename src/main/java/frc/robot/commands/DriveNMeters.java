@@ -37,7 +37,6 @@ public class DriveNMeters extends CommandBase {
     isNegative = (length < 0);
     if (isNegative) s = -s;
     // Use addRequirements() here to declare subsystem dependencies.
-//    addRequirements(Robot.m_robotContainer.m_Drivebase);
     __drivebase = drivebase;
     set = false;
     factor = 1;
@@ -55,16 +54,6 @@ public class DriveNMeters extends CommandBase {
   @Override
   public void execute() 
   {
-    // if (__drivebase.RightMaster.getSelectedSensorPosition() != 0)
-    // {
-    //   SmartDashboard.putNumber("In execute: ", __drivebase.RightMaster.getSelectedSensorPosition());
-   
-    //   double next = __drivebase.LeftMaster.getSelectedSensorPosition()/__drivebase.RightMaster.getSelectedSensorPosition();
-    //   if (next != 0)
-    //     factor *= next;
-    //     SmartDashboard.putNumber("Current ratio: ", next);
-    // }
-    // SmartDashboard.putNumber("Calculated Factor: ", factor);
     double error = __drivebase.LeftMaster.getSelectedSensorPosition() - __drivebase.RightMaster.getSelectedSensorPosition();
     double PI = angle_Controller.output(error);
     double current_speed = s * distance_Controller.output(l - __drivebase.getSensorMetricPosition());
@@ -83,9 +72,6 @@ public class DriveNMeters extends CommandBase {
   @Override
   public boolean isFinished() 
   {
-    return Math.abs(l - __drivebase.getSensorMetricPosition()) < 0.1;
-    // if (!isNegative)
-    // return (__drivebase.getSensorMetricPosition() > l);
-    // else return (__drivebase.getSensorMetricPosition() < l);
+    return Math.abs(l - __drivebase.getSensorMetricPosition()) < distanceErrorTolerance;
   }
 }

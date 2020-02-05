@@ -36,13 +36,14 @@ public class Drivebase extends SubsystemBase
   {
     Gyro.reset();
     RightMaster.setSensorPhase(true);
+    Drive.setDeadband(0);
  //   Drive.setMaxOutput(0.5);
  //   RightMotors.setInverted(true);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed)
   {
-    Drive.tankDrive(leftSpeed, rightSpeed);
+    Drive.tankDrive(leftSpeed, rightSpeed, false);
   }
 
   public void arcadeDrive(double xSpeed, double zRotation)
@@ -76,9 +77,9 @@ public class Drivebase extends SubsystemBase
     Gyro.reset();
   }
 
-  public double getGyroYaw()
+  public double getGyroAngle()
   {
-    return Gyro.getYaw();
+    return Gyro.getAngle();
   }
   
   public double getTurnRate()

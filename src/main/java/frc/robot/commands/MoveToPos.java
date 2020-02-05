@@ -13,13 +13,12 @@ import frc.robot.subsystems.Drivebase;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AutonomousCommand extends SequentialCommandGroup {
+public class MoveToPos extends SequentialCommandGroup {
   /**
-   * Creates a new AutonomousCommand.
+   * Creates a new MoveToPos.
    */
-  public AutonomousCommand(final Drivebase drivebase) {
+  public MoveToPos(Drivebase drivebase, final double length, final double angle, final double speed) {
     // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
-    super(new TurnToAngle(drivebase, 180).withTimeout(5));
+    super(new Turn(drivebase, angle), new DriveNMeters(drivebase, length, speed));
   }
 }

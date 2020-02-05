@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Add your docs here.
  */
@@ -14,6 +16,7 @@ public class PIDController
 {
     double kP, kI, kD;
     double I = 0;
+    // double previous_error = Double.NaN;
     public PIDController(double kP, double kI, double kD)
     {
         this.kP = kP;
@@ -24,7 +27,14 @@ public class PIDController
     {
         double P = kP * error;
         I += kI * 0.02 * error;
-        //D;
+        // double D = 0;
+        // if(previous_error != Double.NaN){
+            // D = (error - previous_error) / 0.02;
+        // }
+        // previous_error = error;
+        SmartDashboard.putNumber("P", P);
+        SmartDashboard.putNumber("I", I);
+        // SmartDashboard.putNumber("D", D);
         
         return P + I;
     }

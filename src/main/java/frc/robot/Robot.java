@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Drivebase calculated distance:", m_robotContainer.m_Drivebase.getSensorMetricPosition());
     if (enL != 0)
     SmartDashboard.putNumber("Right/Left ratio", enR/enL);
+    SmartDashboard.putNumber("Current Angle: ", m_robotContainer.m_Drivebase.getGyroAngle());
     CommandScheduler.getInstance().run();
   }
 
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.m_Drivebase.resetGyro();
   }
 
   @Override
